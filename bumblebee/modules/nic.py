@@ -108,7 +108,10 @@ class Module(bumblebee.engine.Module):
     def get_ssid(self, intf):
         if self._iswlan(intf):
             try:
-                return subprocess.check_output([self.iwgetid,"-r",intf]).strip().decode('utf-8')
+                ssid = subprocess.check_output(
+                        "iw {} info | grep ssid | cut -d ' ' -f 2-".format(intf), shell=True,
+                    ).strip().decode('utf-8')
+                return ssid
             except:
                 return ""
         return ""

@@ -72,6 +72,11 @@ class Module(bumblebee.engine.Module):
             engine.input.register_callback(self, button=event["button"], cmd=event["action"])
 
     def set_volume(self, amount):
+        # import subprocess
+        # subprocess.call("echo '{}' >> /tmp/bum.txt".format(current_volume), shell=True)
+        current_volume = int(self.volume(None).replace('%', ''))
+        if current_volume > 150 and amount.find('+') != -1:
+            amount = '+0%'
         bumblebee.util.execute("pactl set-{}-{} @DEFAULT_{}@ {}".format(
             self._channel, "volume", self._channel.upper(), amount))
 

@@ -11,6 +11,8 @@ Parameters:
 
 import os
 import glob
+import psutil
+import datetime
 
 import bumblebee.input
 import bumblebee.output
@@ -58,7 +60,11 @@ class Module(bumblebee.engine.Module):
             if estimate == power.common.TIME_REMAINING_UNLIMITED:
                 return None
             if estimate == power.common.TIME_REMAINING_UNKNOWN:
-                return ""
+                return '{}:{}'.format(
+                    *divmod(
+                        divmod(psutil.sensors_battery().secsleft, 60)[0], 60,
+                    )
+                )
         except Exception:
             return ""
         return bumblebee.util.durationfmt(estimate*60, shorten=True, suffix=True) # estimate is in minutes
